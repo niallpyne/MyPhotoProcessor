@@ -9,16 +9,27 @@ import piexif
 import piexif.helper 
 import numpy as np 
 
-from image_processor import ImageProcessor
-from file_utils import ensure_directory_exists, create_dot_nomedia
+from .image_processor import ImageProcessor
+from .file_utils import ensure_directory_exists, create_dot_nomedia
 
 class ProcessTab(ttk.Frame):
     def __init__(self, parent_notebook, app_config):
         super().__init__(parent_notebook)
         self.app_config = app_config
-        self.image_processor = ImageProcessor(self.app_config)
-        self.imported_events_root_abs = self.app_config.get_path('imported_events_path')
-        self.final_photos_root_abs = self.app_config.get_path('final_photos_path')
+        # self.image_processor = ImageProcessor(self.app_config)
+        self.image_processor = ImageProcessor() # Call with no arguments
+        
+        # self.imported_events_root_abs = self.app_config.get_path('imported_events_path')
+        
+        # Get the default path from app_config in case it's needed as a fallback
+        default_events_path = self.app_config.DEFAULT_IMPORTED_EVENTS_PATH 
+        self.imported_events_root_abs = self.app_config.get_setting(self.app_config.CONFIG_SECTION_PATHS, self.app_config.CONFIG_KEY_IMPORTED_EVENTS, fallback=default_events_path) 
+
+        # self.final_photos_root_abs = self.app_config.get_path('final_photos_path')
+
+        # Get the default path from app_config in case it's needed as a fallback
+        default_final_path = self.app_config.DEFAULT_FINAL_PHOTOS_PATH
+        self.final_photos_root_abs = self.app_config.get_setting(self.app_config.CONFIG_SECTION_PATHS, self.app_config.CONFIG_KEY_FINAL_PHOTOS, fallback=default_final_path)
 
         self.current_event_name_str = None
         self.current_event_path_abs = None
@@ -340,7 +351,10 @@ class ProcessTab(ttk.Frame):
             messagebox.showwarning("Optimal HSV Search", "Could not find optimal HSV settings from predefined alternatives. Please adjust manually or check image.", parent=self)
 
     def populate_event_dropdown(self):
-        self.imported_events_root_abs = self.app_config.get_path('imported_events_path')
+        # self.imported_events_root_abs = self.app_config.get_path('imported_events_path')
+        default_events_path = self.app_config.DEFAULT_IMPORTED_EVENTS_PATH 
+        self.imported_events_root_abs = self.app_config.get_setting(self.app_config.CONFIG_SECTION_PATHS, self.app_config.CONFIG_KEY_IMPORTED_EVENTS, fallback=default_events_path)
+             
         if not self.imported_events_root_abs or not os.path.isdir(self.imported_events_root_abs):
             self.event_dropdown['values'] = []
             self.event_var.set("")
@@ -369,7 +383,10 @@ class ProcessTab(ttk.Frame):
             return
 
         self.current_event_name_str = event_name
-        self.imported_events_root_abs = self.app_config.get_path('imported_events_path') 
+        #self.imported_events_root_abs = self.app_config.get_path('imported_events_path') 
+        default_events_path = self.app_config.DEFAULT_IMPORTED_EVENTS_PATH 
+        self.imported_events_root_abs = self.app_config.get_setting(self.app_config.CONFIG_SECTION_PATHS, self.app_config.CONFIG_KEY_IMPORTED_EVENTS, fallback=default_events_path)
+          
         self.current_event_path_abs = os.path.join(self.imported_events_root_abs, event_name)
         
         self.clear_crop_rect() 

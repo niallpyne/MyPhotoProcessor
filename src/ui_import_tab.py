@@ -8,8 +8,8 @@ from datetime import datetime
 import webbrowser # For opening Google Maps
 import urllib.parse # Added for URL quoting
 
-from metadata_manager import MetadataManager 
-from file_utils import create_dot_nomedia, ensure_directory_exists
+from .metadata_manager import MetadataManager 
+from .file_utils import create_dot_nomedia, ensure_directory_exists
 
 class ImportTab(ttk.Frame):
     def __init__(self, parent_notebook, app_config):
@@ -22,7 +22,7 @@ class ImportTab(ttk.Frame):
 
         # --- UI Elements ---
         # Section 1: Select Event from Staging
-        select_event_frame = ttk.LabelFrame(self, text="1. Select Event from Phone Staging Area")
+        select_event_frame = ttk.LabelFrame(self, text="1. Select Event from Storage Area")
         select_event_frame.pack(padx=10, pady=10, fill="x")
 
         self.select_event_button = ttk.Button(select_event_frame, text="Browse for Event Folder...", command=self.select_event_from_staging)

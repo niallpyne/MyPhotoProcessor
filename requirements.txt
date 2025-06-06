@@ -1,0 +1,4 @@
+Pillow
+piexif
+opencv-python
+numpy

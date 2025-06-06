@@ -9,9 +9,20 @@ class ReportingTab(ttk.Frame):
         super().__init__(parent_notebook)
         self.app_config = app_config
         # Use get_path for resolved absolute paths
-        self.imported_events_root_abs = self.app_config.get_path('imported_events_path')
-        self.final_photos_root_abs = self.app_config.get_path('final_photos_path')
-
+        # self.imported_events_root_abs = self.app_config.get_path('imported_events_path')
+        
+        default_events_path = self.app_config.DEFAULT_IMPORTED_EVENTS_PATH 
+        self.imported_events_root_abs = self.app_config.get_setting(
+            self.app_config.CONFIG_SECTION_PATHS,         # This is 'Paths'
+            self.app_config.CONFIG_KEY_IMPORTED_EVENTS,   # This is 'ImportedEventsDirectory'
+            fallback=default_events_path)        
+        
+        #self.final_photos_root_abs = self.app_config.get_path('final_photos_path')
+        default_final_path = self.app_config.DEFAULT_FINAL_PHOTOS_PATH 
+        self.final_photos_root_abs = self.app_config.get_setting(
+            self.app_config.CONFIG_SECTION_PATHS,       # This is 'Paths'
+            self.app_config.CONFIG_KEY_FINAL_PHOTOS,    # This is 'FinalPhotosDirectory'
+            fallback=default_final_path)
 
         # --- UI Elements ---
         # Event Selection
@@ -54,7 +65,13 @@ class ReportingTab(ttk.Frame):
 
 
     def populate_event_dropdown(self):
-        self.imported_events_root_abs = self.app_config.get_path('imported_events_path') # Refresh path
+        # self.imported_events_root_abs = self.app_config.get_path('imported_events_path') # Refresh path
+        default_events_path = self.app_config.DEFAULT_IMPORTED_EVENTS_PATH 
+        self.imported_events_root_abs = self.app_config.get_setting(
+            self.app_config.CONFIG_SECTION_PATHS,         # This is 'Paths'
+            self.app_config.CONFIG_KEY_IMPORTED_EVENTS,   # This is 'ImportedEventsDirectory'
+            fallback=default_events_path)
+        
         if not self.imported_events_root_abs or not os.path.isdir(self.imported_events_root_abs):
             self.event_dropdown['values'] = []
             self.event_var.set("")
